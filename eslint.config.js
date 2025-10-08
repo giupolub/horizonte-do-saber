@@ -7,10 +7,11 @@ module.exports = [
     languageOptions: {
       globals: {
         ...globals.node,
+        ...globals.jest,
       },
     },
     rules: {
-      "no-unused-vars": "warn",
+      "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
       "no-undef": "error",
       "semi": ["error", "always"],
       "quotes": ["error", "double"],

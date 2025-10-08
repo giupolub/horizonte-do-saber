@@ -11,11 +11,12 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("Conectado ao MongoDB."))
-  .catch((err) => console.error("Erro ao conectar ao MongoDB:", err));
-
+if (process.env.NODE_ENV !== "test") {
+  mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => console.log("Conectado ao MongoDB."))
+    .catch((err) => console.error("Erro ao conectar ao MongoDB:", err));
+}
 
 app.get("/", (req, res) => res.send("Servidor rodando."));
 app.use("/posts", postRoutes);

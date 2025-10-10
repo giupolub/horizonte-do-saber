@@ -49,6 +49,9 @@ horizonte-do-saber/
 
 ```bash
 git clone https://github.com/seu-usuario/horizonte-do-saber.git
+ou
+git clone git@github.com:giupolub/horizonte-do-saber.git
+
 cd horizonte-do-saber
 ```
 

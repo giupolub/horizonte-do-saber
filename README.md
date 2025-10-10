@@ -98,16 +98,23 @@ npm test
 
 ## 🐳 Docker
 
-### Build da imagem
+### 1. Configurar variáveis de ambiente
 
-```bash
-docker build -t horizonte-do-saber .
+Crie (ou edite) o arquivo `.env` com as seguintes variáveis:
+
+```env
+PORT=3000
+MONGO_URI=mongodb://mongodb:27017/horizonte-do-saber
 ```
 
-### Rodar container
+### 2. Abra o Docker Desktop para garantir que o Docker e o Docker Compose estão ativos
+
+### 3. Build e execução dos containers
+
+No terminal, execute o seguinte comando para construir as imagens e subir os containers:
 
 ```bash
-docker run -p 3000:3000 horizonte-do-saber
+docker-compose up --build
 ```
 
 ---

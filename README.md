@@ -48,7 +48,7 @@ horizonte-do-saber/
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/horizonte-do-saber.git
+git clone https://github.com/giupolub/horizonte-do-saber.git
 ou
 git clone git@github.com:giupolub/horizonte-do-saber.git
 
@@ -155,3 +155,4 @@ O workflow configurado executa automaticamente:
 ## 📚 Conclusão
 
 O projeto Horizonte do Saber entrega uma **plataforma funcional de blogging** com backend robusto, persistência de dados e testes unitários, pronta para ser usada por professores e alunos, com automação de deploy e containerização.
+

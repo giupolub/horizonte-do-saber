@@ -2,6 +2,7 @@ const express = require("express");
 const Post = require("../models/Post");
 const router = express.Router();
 
+// Criar post
 router.post("/", async (req, res) => {
   try {
     const { titulo, conteudo, autor } = req.body;
@@ -13,6 +14,7 @@ router.post("/", async (req, res) => {
   }
 });
 
+// Listar posts
 router.get("/", async (req, res) => {
   try {
     const posts = await Post.find().sort({ createdAt: -1 });
@@ -22,6 +24,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Buscar post por palavra chave
 router.get("/search", async (req, res) => {
   try {
     const { q } = req.query;
@@ -30,6 +33,7 @@ router.get("/search", async (req, res) => {
     const posts = await Post.find({
       $or: [
         { titulo: { $regex: q, $options: "i" } },
+        { autor: { $regex: q, $options: "i" } },
         { conteudo: { $regex: q, $options: "i" } },
       ],
     }).sort({ createdAt: -1 });
@@ -40,6 +44,7 @@ router.get("/search", async (req, res) => {
   }
 });
 
+// Buscar post por id
 router.get("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -50,6 +55,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Atualizar post
 router.put("/:id", async (req, res) => {
   try {
     const { titulo, conteudo, autor } = req.body;
@@ -66,6 +72,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// Remover post
 router.delete("/:id", async (req, res) => {
   try {
     const postRemovido = await Post.findByIdAndDelete(req.params.id);

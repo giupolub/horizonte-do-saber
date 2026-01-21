@@ -3,6 +3,8 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const postRoutes = require("./routes/postRoutes");
+const professorRoutes = require("./routes/professorRoutes");
+const alunoRoutes = require("./routes/alunoRoutes");
 
 dotenv.config();
 const app = express();
@@ -20,5 +22,7 @@ if (process.env.NODE_ENV !== "test") {
 
 app.get("/", (req, res) => res.send("Servidor rodando."));
 app.use("/posts", postRoutes);
+app.use("/professores", professorRoutes);
+app.use("/alunos", alunoRoutes);
 
 module.exports = app;

@@ -1,10 +1,15 @@
-# Horizonte do Saber - Plataforma de Blogging Dinâmico
+# Horizonte do Saber - Plataforma Educacional
 
 ## 📖 Descrição do Projeto
 
-O **Horizonte do Saber** é uma aplicação de blogging voltada para professores e alunos da rede pública de educação. A plataforma permite que docentes postem aulas, atividades e mensagens, enquanto alunos podem visualizar e buscar conteúdos de forma centralizada e tecnológica.
+O Horizonte do Saber é uma plataforma educacional voltada para professores e alunos da rede pública de ensino. A aplicação permite:
 
-O projeto foi implementado utilizando **Node.js**, **Express**, **MongoDB**, **Docker** e **GitHub Actions** para automação de CI/CD.
+- Cadastro de professores
+- Cadastro de alunos com matrícula automática
+- Publicação de postagens educacionais (aulas, atividades, comunicados)
+- Busca e listagem de dados de forma centralizada
+
+O projeto foi desenvolvido com foco em boas práticas de backend, utilizando Node.js, Express, MongoDB, Docker e GitHub Actions.
 
 ---
 
@@ -26,20 +31,55 @@ O projeto segue uma arquitetura simples e modular:
 ```
 horizonte-do-saber/
 ├─ src/
-│  ├─ models/          # Modelos do MongoDB (Post)
-│  ├─ routes/          # Rotas da API (postRoutes.js)
-│  ├─ server.js        # Configuração do servidor Express
-├─ tests/              # Testes unitários e de integração
-├─ .github/workflows/  # Workflows do GitHub Actions (CI/CD)
-├─ Dockerfile          # Containerização da aplicação
-├─ .env                # Variáveis de ambiente
+│  ├─ models/
+│  │   ├─ Post.js
+│  │   ├─ Aluno.js
+│  │   ├─ Professor.js
+│  │   └─ Counter.js
+│  ├─ routes/
+│  │   ├─ postRoutes.js
+│  │   ├─ alunoRoutes.js
+│  │   └─ professorRoutes.js
+│  ├─ utils/
+│  │   └─ gerarMatricula.js
+│  ├─ server.js
+│  └─ index.js
+├─ tests/
+├─ .github/workflows/
+├─ Dockerfile
+├─ docker-compose.yml
+├─ .env
 ├─ package.json
-├─ README.md
+└─ README.md
 ```
+---
 
-* **Modelos:** `Post` representa uma postagem com `título`, `conteúdo`, `autor` e `timestamps`.
-* **Rotas:** CRUD completo + busca por palavras-chave.
-* **Testes:** Cobertura mínima de 20%, garantindo estabilidade nas funções críticas.
+## 📚 Entidades do Sistema
+
+### 🧑‍🏫 Professor
+
+Campos:
+- nome (máx 30)
+- sobrenome (máx 70)
+- disciplina (máx 50)
+- email (único, validado)
+- telefone (único, apenas números)
+
+### 🎓 Aluno
+
+Campos:
+- nome (máx 30)
+- sobrenome (máx 70)
+- email (único, validado)
+- telefone (único, apenas números)
+- matricula (gerada automaticamente)
+
+### 📝 Postagem
+
+Campos:
+- titulo
+- conteudo
+- autor
 
 ---
 
@@ -55,30 +95,52 @@ git clone git@github.com:giupolub/horizonte-do-saber.git
 cd horizonte-do-saber
 ```
 
-### 2. Instalar dependências
+### 2. Abra o Docker Desktop para garantir que o Docker e o Docker Compose estão ativos
+
+### 3. Instalar dependências
 
 ```bash
 npm install
 ```
 
-### 3. Configurar variáveis de ambiente
+### 4. Configurar variáveis de ambiente
 
 Crie um arquivo `.env` com as seguintes variáveis:
 
 ```env
+Para rodar local:
+
 PORT=3000
 MONGO_URI=mongodb://localhost:27017/horizonte-do-saber
+
+Para rodar dentro do container:
+
+PORT=3000
+MONGO_URI=mongodb://mongodb:27017/horizonte-do-saber
 ```
 
-### 4. Rodar a aplicação
+### 5. Rodar a aplicação local
 
-```bash
+Suba o Mongo no container:
+```env
+docker compose up -d mongodb
+```
+
+Rode o backend local:
+```env
 npm run dev
+```
+
+### 5.1 Rodar a aplicação no Docker
+
+Suba apenas com o docker:
+```env
+docker compose up --build
 ```
 
 A aplicação estará disponível em `http://localhost:3000`.
 
-### 5. Rodar testes
+### 6. Rodar testes
 
 ```bash
 npm test
@@ -88,36 +150,70 @@ npm test
 
 ## 🚀 Endpoints da API
 
-| Método | Endpoint              | Descrição                         | Corpo da Requisição                                     |
-| ------ | --------------------- | --------------------------------- | ------------------------------------------------------- |
-| GET    | /posts                | Lista de todas as postagens       | -                                                       |
-| GET    | /posts/:id            | Retorna uma postagem específica   | -                                                       |
-| POST   | /posts                | Cria uma nova postagem            | `{ "title": "...", "content": "...", "author": "..." }` |
-| PUT    | /posts/:id            | Atualiza uma postagem existente   | `{ "title": "...", "content": "...", "author": "..." }` |
-| DELETE | /posts/:id            | Exclui uma postagem               | -                                                       |
-| GET    | /posts/search?q=termo | Busca postagens por palavra-chave | -                                                       |
+### Alunos
 
----
+| Método | Endpoint               | Descrição                                 |
+| ------ | ---------------------- | ----------------------------------------- |
+| GET    | /alunos                | Listar alunos                             |
+| GET    | /alunos/:id            | Buscar aluno por id                       |
+| POST   | /alunos                | Criar aluno                               |
+| PUT    | /alunos/:id            | Atualizar aluno                           |
+| DELETE | /alunos/:id            | Remover aluno                             |
+| GET    | /alunos/search?q=termo | Buscar aluno por nome/sobrenome/matricula |
 
-## 🐳 Docker
-
-### 1. Configurar variáveis de ambiente
-
-Crie (ou edite) o arquivo `.env` com as seguintes variáveis:
-
-```env
-PORT=3000
-MONGO_URI=mongodb://mongodb:27017/horizonte-do-saber
-```
-
-### 2. Abra o Docker Desktop para garantir que o Docker e o Docker Compose estão ativos
-
-### 3. Build e execução dos containers
-
-No terminal, execute o seguinte comando para construir as imagens e subir os containers:
+Exemplo de requisição (para criar/atualizar):
 
 ```bash
-docker-compose up --build
+{
+  "nome": "Giuseppe",
+  "sobrenome": "Orlandi",
+  "email": "giuseppe.po@hotmail.com",
+  "telefone": "11 9 9999 9999"
+}
+```
+
+### Professores
+
+| Método | Endpoint              | Descrição                         |
+| ------ | --------------------- | --------------------------------- |
+| GET    | /professores                | Listar professores       |
+| GET    | /professores/:id            | Buscar professor por id   |
+| POST   | /professores                | Criar professor            |
+| PUT    | /professores/:id            | Atualizar professor   |
+| DELETE | /professores/:id            | Remover professor               |
+| GET    | /professores/search?q=termo | Buscar professor por nome/sobrenome/disciplina |
+
+Exemplo de requisição (para criar/atualizar):
+
+```bash
+{
+  "nome": "Maria",
+  "sobrenome": "Joaquina",
+  "disciplina": "Geologia",
+  "email": "maria@joaquina.com",
+  "telefone": "11111111112"
+}
+```
+
+### Postagens
+
+| Método | Endpoint              | Descrição                         |
+| ------ | --------------------- | --------------------------------- |
+| GET    | /posts                | Listar postagens       |
+| GET    | /posts/:id            | Buscar postagem por id   |
+| POST   | /posts                | Criar postagem            |
+| PUT    | /posts/:id            | Atualizar postagem   |
+| DELETE | /posts/:id            | Remover postagem               |
+| GET    | /posts/search?q=termo | Buscar postagem por autor/titulo/conteudo |
+
+Exemplo de requisição (para criar/atualizar):
+
+```bash
+{
+	"titulo": "Introdução à Programação com Lógica",
+	"conteudo": "Nesta atividade, os alunos terão o primeiro contato com conceitos de lógica de programação, como variáveis, condições e repetição. Assista ao vídeo indicado, leia o material de apoio e resolva os desafios propostos utilizando pseudocódigo. O foco é desenvolver o raciocínio lógico antes do uso de uma linguagem de programação específica.",
+	"autor": "Prof. Felipe Martins"
+}
 ```
 
 ---
@@ -154,5 +250,13 @@ O workflow configurado executa automaticamente:
 
 ## 📚 Conclusão
 
-O projeto Horizonte do Saber entrega uma **plataforma funcional de blogging** com backend robusto, persistência de dados e testes unitários, pronta para ser usada por professores e alunos, com automação de deploy e containerização.
 
+O Horizonte do Saber evoluiu de um simples blog para um sistema educacional completo, com:
+
+- Controle de alunos e professores
+- Matrícula automática
+- Persistência real em banco
+- Boas práticas de backend
+- Estrutura pronta para escalar
+
+Projeto ideal para portfólio e demonstração de backend profissional.
